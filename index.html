@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
   <style>
     body {
       margin: 0;
@@ -87,7 +82,19 @@
     header .container {
         width: min(100% - 40px, 1377px);
     }
-    div#parallax-container .icones img:nth-child(1)
+    div#parallax-container .icones img {
+      position: relative;
+      top: 300px;
+      pointer-events: none; /* para garantir que a imagem não capture os eventos do mouse */
+      transition: transform 0.1s ease-out; /* para criar um efeito de transição suave */
+      left: 9%;
+      width: 89%;
+    }
+    .bools {
+      position: relative;
+      top: 200px !important;
+    }
+    /* div#parallax-container .icones img:nth-child(1)
     {
       position: absolute;
       top: 700px;
@@ -127,16 +134,7 @@
       position: absolute;
       top: 680px;
       left: 83%;
-    }
-    div#parallax-container .icones img {
-      position: relative;
-      transition: 0.5s ease-in-out;
-      transform: scale(1);
-
-    }
-    div#parallax-container .icones img:hover{
-      transform: scale(0.8);
-    }
+    } */
     
     @keyframes rotation {
       from {
@@ -145,10 +143,6 @@
       to {
         transform: rotate(359deg);
       }
-    }
-    .js-tilt{
-      transform-style: preserve-3d;
-      transform: translateZ(20px);
     }
   </style>
 </head>
@@ -172,26 +166,22 @@
   </header>
 
   <div class="container">
-    <div id="parallax-container" class="js-tilt" data-tilt>
+    <div id="parallax-container">
       <div style="background: url(01.png);"></div>
-      <div style="background: url(02.png);animation: rotation 125s infinite linear;"></div>
-        <div class="icones">
-          <img src="con-01.png" alt="">
-          <img src="con-2.png" alt="">
+      <div style="background: url(02.png);animation: rotation 125s infinite linear;" ></div>
+      <div style="background: url(bolinhas.png);" class="bools"></div>
+        <div class="icones moveitem">
+          <img id="movingImage" src="icones.png" alt="" class="movable-image box-image">
+          <!-- <img src="con-2.png" alt="">
           <img src="con-3.png" alt="">
           <img src="con-4.png" alt="">
           <img src="con-5.png" alt="">
           <img src="con-6.png" alt="">
-          <img src="con-7.png" alt="">
+          <img src="con-7.png" alt=""> -->
         </div>
-    </div>
+    </div>  
   </div>
-  <script
-  src="https://code.jquery.com/jquery-3.7.1.min.js"
-  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-  crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/tilt.js@1.2.1/dest/tilt.jquery.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script>
     window.addEventListener('scroll', () => {
       let parent =  document.getElementById('parallax-container');
@@ -201,10 +191,25 @@
       }
     }, false);
 
-    $('.js-tilt').tilt({
-      glare: true,
-      maxGlare: .5
+    const movingImage = document.getElementById('movingImage');
+
+    document.addEventListener('mousemove', (e) => {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      // Calcula a posição relativa do mouse dentro do contêiner da imagem
+      const containerRect = movingImage.parentElement.getBoundingClientRect();
+      const relMouseX = mouseX - containerRect.left;
+      const relMouseY = mouseY - containerRect.top;
+      
+      // Calcula o deslocamento da imagem em relação ao mouse
+      const offsetX = relMouseX / containerRect.width - 0.5;
+      const offsetY = relMouseY / containerRect.height - 0.5;
+      
+      // Aplica a transformação à imagem
+      movingImage.style.transform = `translate(${offsetX * 50}px, ${offsetY * 50}px)`;
     });
+
   </script>
 </body>
 </html>
